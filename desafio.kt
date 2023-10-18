@@ -1,21 +1,54 @@
-// [Template no Kotlin Playground](https://pl.kotl.in/WcteahpyN)
-
 enum class Nivel { BASICO, INTERMEDIARIO, DIFICIL }
 
-class Usuario
+data class Usuario(val nome: String, val formacao: Formacao)
 
-data class ConteudoEducacional(var nome: String, val duracao: Int = 60)
+data class ConteudoEducacional(var nome: String, val duracao: Int)
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+data class Formacao(val nome: String, val nivel: Nivel, var conteudos: List<ConteudoEducacional>) {
 
-    val inscritos = mutableListOf<Usuario>()
-    
-    fun matricular(usuario: Usuario) {
-        TODO("Utilize o parâmetro $usuario para simular uma matrícula (usar a lista de $inscritos).")
+
+    private fun nivelamento(nivel: Nivel): String {
+        return when (nivel) {
+            Nivel.BASICO -> "Básico"
+            Nivel.INTERMEDIARIO -> "Intermediário"
+            Nivel.DIFICIL -> "Difícil"
+        }
+    }
+
+    override fun toString(): String {
+        return "Formação: $nome, Nível: ${nivelamento(nivel)}, Conteúdo: ${
+            conteudos.joinToString{"${it.nome} Duração: ${it.duracao}"}}"
     }
 }
 
+val inscritos = mutableListOf<Usuario>()
+fun imprimirInscritos(){
+    inscritos.forEach{ i-> println("Aluno: ${i.nome} ${i.formacao} \n") }
+}
+fun matricular(usuario: Usuario) {
+
+    inscritos.add(usuario)
+
+}
+
 fun main() {
-    TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
-    TODO("Simule alguns cenários de teste. Para isso, crie alguns objetos usando as classes em questão.")
+    val formacao1 = Formacao(
+        nome = "Formação Java", nivel = Nivel.BASICO, conteudos = listOf(
+            ConteudoEducacional(nome = "Linguagem Java", duracao = 20),
+            ConteudoEducacional(nome = "Programação Orientada a Objetos", duracao = 20)
+        )
+    )
+
+    val formacao2 = Formacao(
+        nome = "Formação Python", nivel = Nivel.INTERMEDIARIO, conteudos = listOf(
+            ConteudoEducacional(nome = "Linguagem Python", duracao = 20),
+            ConteudoEducacional(nome = "Programação Funcional", duracao = 20)
+        )
+    )
+
+    matricular(Usuario("José", formacao1))
+    matricular(Usuario("Maria", formacao2))
+    matricular(Usuario("Pedro", formacao2))
+
+    imprimirInscritos()
 }
